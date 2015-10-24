@@ -25,7 +25,7 @@ public class CoreGame extends BasicGame {
     float xrot;
     float yrot;
     float rotation;
-    // Pause status
+    // Hit Box
     // Image declaration
     private Image ship = null;
     // Input declaration
