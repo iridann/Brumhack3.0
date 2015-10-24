@@ -6,42 +6,26 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
+
 
 /**
  * @author Iridann.
  */
 
-public class SimpleGame extends BasicGame {
-    private Image ship = null;
-    private Image asteroid1 = null;
-    private Image asteroid2 = null;
-    private Image asteroid3 = null;
-    private Image asteroid4 = null;
-    private Shape circle = null;
+public class SimpleGame extends StateBasedGame {
 
-    public SimpleGame(String title) {
-        super(title);
+
+    public SimpleGame(String name) {
+        super(name);
     }
 
     @Override
-    public void init(GameContainer container) throws SlickException {
-    ship = new Image("res/photos.007.png");
-        asteroid1 = new Image("res/photos.003.png");
-        asteroid2 = new Image("res/photos.004.png");
-        asteroid3 = new Image("res/photos.005.png");
-        asteroid4 = new Image("res/photos.006.png");
-        circle = new Circle(50,50,300);
-    }
-
-    @Override
-    public void render(GameContainer container, Graphics g) throws SlickException {
-    g.texture(circle,ship,true);
-    }
-
-    @Override
-    public void update(GameContainer container, int delta) throws SlickException {
-    circle.setCenterX(container.getInput().getMouseX());
-        circle.setCenterY(container.getInput().getMouseY());
+    public void initStatesList(GameContainer container) throws SlickException {
+        this.addState(new Start_Screen());
+        this.addState(new Game_Screen());
+        this.addState(new Pause_Screen());
+        this.addState(new Game_Over());
     }
 
     public static void main(String[] args) throws SlickException {
@@ -49,6 +33,4 @@ public class SimpleGame extends BasicGame {
         agc.setDisplayMode(800,640,false);
         agc.start();
     }
-
-
 }
