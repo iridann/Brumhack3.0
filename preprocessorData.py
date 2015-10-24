@@ -122,10 +122,14 @@ if __name__ == "__main__":
 	for i in range(0, len(arr)):
 		pullYears(arr[i], startYear, endYear, db)
 
+	#write file
+	fh = open("bloomberg.brumhack", "w")
+
 	for company in arr:
 		for y in company.years:
 			for m in y.months:
 				m.computeOverallValue()
-				print(str(company.name) +": "+ str(m.name) + " " + str(y.name) + ": " + str(int(m.value)))
+				fh.write(str(company.name) +","+ str(m.name) + "," + str(y.name) + "," + str(int(m.value)) + "\n")
+	fh.close()
 
 	
