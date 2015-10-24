@@ -6,15 +6,61 @@ from boto3.dynamodb.conditions import Key
 
 
 class Company():
-	def __init__(self, name):
+	def __init__(self, name, stockcode):
+		self.stockcode = stockcode
 		self.name = name
-		self.values = {}
+		self.years = []
+
+	def addYear(self, year):
+		self.years.append(year)
 
 	def __str__(self):
-		s = str(self.name)
-		for month in self.values:
-			s+= str(month) + " " + str(self.values[month])
-		return s
+		return self.name
+
+	def hasYear(self, year):
+		for y in self.years:
+			if y.name == year:
+				return True
+		return False
+
+	def getYear(self, year):
+		for y in self.years:
+			if y.name == year:
+				return y 
+
+class Year():
+	def __init__(self, year):
+		self.name = year
+		self.months = []
+
+	def addMonth(self, month):
+		self.months.append(month)
+
+	def hasMonth(self, month):
+		for m in self.months:
+			if m.name == month:
+				return True
+		return False
+
+	def getMonth(self, month):
+		for m in self.months:
+			if m.name == month:
+				return m
+
+class Month():
+	def __init__(self, name):
+		self.name = name
+		self.value = 0.0
+		self.nrDays = 1
+
+	def addDay(self, value):
+		self.nrDays = self.nrDays + 1
+		self.value = self.value + value
+
+	def computeOverallValue(self):
+		self.value = self.value / float(self.nrDays)
+
+
 
 
 def connect():
@@ -27,12 +73,26 @@ def grabData(company, startDate, endDate, year, db):
 	table = db.Table(str(year))
 	startDate = str(year) + '-' + startDate 
 	endDate = str(year) + '-' + endDate
-	data = table.query(KeyConditionExpression = Key('Ticker').eq(company.name) & Key('Date').between(startDate, endDate))
+	data = table.query(KeyConditionExpression = Key('Ticker').eq(company.stockcode) & Key('Date').between(startDate, endDate))
+	#print(data['Items'])
 	return data['Items']
 
-def extractMonth(data):
+def extractMonth(data, company):
 	for d in data:
-		print( str(d['Date'])  + ": " + str(d['Open']) )
+		#print( str(d['Date'])  + ": " + str(d['Open']) )
+		#extract the year
+		#YYYY-MM-DD
+		year = d['Date'][0:4]
+		month = d['Date'][5:7]
+		value = float(d['Market_Cap'])  
+		
+		if not company.hasYear(year):
+			company.addYear(Year(year))
+
+		if not company.getYear(year).hasMonth(month):
+			company.getYear(year).addMonth(Month(month))
+
+		company.getYear(year).getMonth(month).addDay(value)
 
 def pullYears(company, startYear, endYear, db):
 	if endYear < startYear:
@@ -40,12 +100,32 @@ def pullYears(company, startYear, endYear, db):
 		endYear = startYear
 		startYear = endYear
 	
-	for year in range(startYear, endYear+1):
-		extractMonth(grabData(company, '01-01', '12-31', year, db))
+	print(company.name)
 
+	for year in range(startYear, endYear+1):
+		extractMonth(grabData(company, '01-01', '12-31', year, db), company)
+		print(str(year) + " done")
+
+
+	
 if __name__ == "__main__":
-	arr = [Company('AAPL US Equity')]
+	startYear = 2006
+	endYear = 2013
+	ibm = Company('IBM','IBM US Equity')
+	apple = Company('APPLE','AAPL US Equity')
+	yhoo = Company('YAHOO','YHOO US Equity')
+	ko = Company('COCA-COLA','KO US Equity')
+	bmw = Company('BMW','BMW GR Equity')
+	gs = Company('GOLDMAN SACHS','GS US Equity')
+	arr = [ibm, apple, yhoo, ko, bmw, gs]
 	db = connect()
+	for i in range(0, len(arr)):
+		pullYears(arr[i], startYear, endYear, db)
+
 	for company in arr:
-		pullYears(company, 2008, 2012, db)
+		for y in company.years:
+			for m in y.months:
+				m.computeOverallValue()
+				print(str(company.name) +": "+ str(m.name) + " " + str(y.name) + ": " + str(int(m.value)))
+
 	
