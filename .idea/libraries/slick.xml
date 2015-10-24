@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="slick">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick" />
+      <root url="jar://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/lib/lwjgl.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/lib/lwjgl_util.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/lib/slick.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/javadoc" />
+    </JAVADOC>
+    <NATIVE>
+      <root url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick" />
+    </NATIVE>
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/src" />
+      <root url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick/tools" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Downloads/Hackathons/Brumhack Resources/slick" recursive="false" />
+  </library>
+</component>
