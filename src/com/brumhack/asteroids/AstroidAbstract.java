@@ -20,7 +20,16 @@ public class AstroidAbstract {
         this.aAstroidList.remove(removeAstroid);
     }
 
+    public ArrayList<Astroid> getAstroidPositions(){
+        ArrayList<Astroid> arr = new ArrayList<>();
+        for(AObserver a : aAstroidList) {
+            arr.add(a.getData());
+        }
+        return arr;
+    }
+
     protected void moveAsteroids(){
         for(AObserver a : aAstroidList) a.move();
     }
+
 }

@@ -30,4 +30,9 @@ public class Astroid implements AObserver {
         this.y += this.movingX;
         System.out.println("Android moving");
     }
+
+    @Override
+    public Astroid getData() {
+       return this;
+    }
 }

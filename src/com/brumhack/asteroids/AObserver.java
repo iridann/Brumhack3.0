@@ -5,4 +5,5 @@ package com.brumhack.asteroids;
  */
 public interface AObserver {
     public void move();
+    public Astroid getData();
 }
