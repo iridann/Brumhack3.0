@@ -157,6 +157,10 @@ public class Game_Screen extends BasicGameState {
         for (Bullet b : bullets) {
             g.draw(new Circle(b.getX(),b.getY(), 5));
         }
+        ArrayList<Astroid> arr = aAbstract.getAstroidPositions();
+        for (Astroid a : arr) {
+            g.draw(new Circle(200 , 200,a.getDimension()));
+        }
         ship.setCenterY(shipy);
         ship.setCenterX(shipx);
         g.drawString("Angle: " + Float.toString(rotation) + "\nSpeed: " + Float.toString(speed) + "\nAccel: " + Float.toString(accel) + "\nx speed: " + xspeed + "\ny speed: " + yspeed, 10, 10);
