@@ -4,9 +4,10 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,8 +42,6 @@ public class Game_Screen extends BasicGameState {
     private static float maxSpeed = 10;
     private float xspeed;
     private float yspeed;
-    private float xrot;
-    private float yrot;
     private float rotation;
     // Bullet variables
     private static float bulletSpeed = (float)(maxSpeed * 1.4);
@@ -66,7 +65,6 @@ public class Game_Screen extends BasicGameState {
 
     private int spawn(){
         float x = 0;
-        System.out.println(x);
         float y = 0;
         float moveX = 1;
         float moveY = 3;
@@ -80,7 +78,7 @@ public class Game_Screen extends BasicGameState {
                 do {
                     y = rand.nextInt(800) - 100;
                 } while ((y < 650) && (y > -50));
-                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 1500, c.getName());
+                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000, c.getName());
                 moveX = (float)(rand.nextInt(10) - 5 + 1);
                 moveY = (float)(rand.nextInt(10) - 5 + 1);
                 if((int)moveX == 0)
@@ -149,7 +147,7 @@ public class Game_Screen extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         for (Circle m : meteors) {
-            if (ship.intersects(m)) { game.enterState(3); }
+            if (ship.intersects(m)) { game.enterState(3, new FadeOutTransition(), new FadeInTransition()); }
         }
         lastSpawn -= delta;
         if(lastSpawn <= 0) lastSpawn = spawn();
@@ -228,7 +226,7 @@ public class Game_Screen extends BasicGameState {
                 score++;
             } catch(IndexOutOfBoundsException ex) {
                 System.err.println(ex);
-            };
+            }
         }
         
         ship.setCenterY(shipy);
