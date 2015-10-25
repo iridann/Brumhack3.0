@@ -124,7 +124,6 @@ if __name__ == "__main__":
 
 	#write file
 	fh = open("bloomberg.brumhack", "w")
-
 	for company in arr:
 		for y in company.years:
 			for m in y.months:
