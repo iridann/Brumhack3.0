@@ -70,6 +70,7 @@ public class Game_Screen extends BasicGameState {
         float y = 0;
         float moveX = 1;
         float moveY = 3;
+        aAbstract.checkForDeletions();
         for(Company c : companies){
             Astroid a;
             if(c.hasDate(firstYear, firstMonth)) {
@@ -138,7 +139,9 @@ public class Game_Screen extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-
+        for (Circle m : meteors) {
+            if (ship.intersects(m)) { game.enterState(3); }
+        }
         lastSpawn -= delta;
         if(lastSpawn <= 0) lastSpawn = spawn();
         lastAstMove -= delta;
@@ -168,7 +171,21 @@ public class Game_Screen extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         Start_Screen.backGround.drawCentered(400, 300);
-        for (Bullet b : bullets) {
+        meteors.clear();
+        projectiles.clear();
+        int pIndex = 0;
+        int mIndex = 0;
+        boolean remove = false;
+        aAbstract.checkForDeletions();
+        ArrayList<Bullet> _oldBullets = bullets;
+        bullets = new ArrayList<Bullet>();
+        for (Bullet b : _oldBullets) {
+            if ((b.getX() < 0) || (b.getX() > 800)) {
+            } else if ((b.getY() < 0) || (b.getY() > 600)) {
+
+            } else {
+                bullets.add(b);
+            }
             Circle c = new Circle(b.getX(),b.getY(), 5);
             projectiles.add(c);
             g.draw(c);
@@ -179,9 +196,28 @@ public class Game_Screen extends BasicGameState {
             meteors.add(c);
             g.draw(c);
         }
+        for (Circle m : meteors) {
+            if (remove == true) { break; }
+            for (Circle p : projectiles) {
+                if (p.intersects(m)) {
+                    pIndex = projectiles.indexOf(p);
+                    mIndex = meteors.indexOf(m);
+                    remove = true;
+                    break;
+                }
+            }
+        }
+
+        if (remove == true) {
+            projectiles.remove(pIndex);
+            bullets.remove(pIndex);
+            meteors.remove(mIndex);
+            aAbstract.unregister(arr.get(mIndex));
+            score++;
+        }
         ship.setCenterY(shipy);
         ship.setCenterX(shipx);
-        g.drawString("Angle: " + Float.toString(rotation) + "\nSpeed: " + Float.toString(speed) + "\nAccel: " + Float.toString(accel) + "\nScore: " + score, 10, 10);
+        g.drawString("\nScore: " + score + "\nBullets: " + bullets.size() + "\nAstroids: " + meteors.size(), 10, 10);
         g.rotate(shipx, shipy, rotation);
         g.draw(ship);
         g.fill(ship);

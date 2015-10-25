@@ -16,6 +16,18 @@ public class AstroidAbstract {
 
     }
 
+    public void checkForDeletions() {
+        for (Astroid a : getAstroidPositions()) {
+            if ((a.getX() < -200) || (a.getX() > 1000)) {
+                unregister(a);
+                break;
+            } else if ((a.getY() < -200) || (a.getY() > 800)) {
+                unregister(a);
+                break;
+            }
+        }
+    }
+
     public void unregister(AObserver removeAstroid){
         this.aAstroidList.remove(removeAstroid);
     }
