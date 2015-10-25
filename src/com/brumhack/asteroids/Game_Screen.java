@@ -8,6 +8,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -51,6 +53,8 @@ public class Game_Screen extends BasicGameState {
     private ArrayList<Circle> projectiles;
     // Input declaration
     private Input input;
+    private String currentYear;
+    private int counter;
     @Override
     public int getID() {
         return 1;
@@ -140,8 +144,7 @@ public class Game_Screen extends BasicGameState {
         bullets = new ArrayList<Bullet>();
         projectiles = new ArrayList<Circle>();
         meteors = new ArrayList<Circle>();
-
-
+        currentYear = "Year: ";
     }
 
     @Override
@@ -149,6 +152,15 @@ public class Game_Screen extends BasicGameState {
         for (Circle m : meteors) {
             if (ship.intersects(m)) { game.enterState(3, new FadeOutTransition(), new FadeInTransition()); }
         }
+        if(firstYear!=0){
+            currentYear ="Year: ";
+            currentYear+=firstYear;
+        }
+
+        if(firstYear==2015){
+            game.enterState(3,new HorizontalSplitTransition(), new RotateTransition());
+        }
+
         lastSpawn -= delta;
         if(lastSpawn <= 0) lastSpawn = spawn();
         lastAstMove -= delta;
@@ -178,6 +190,7 @@ public class Game_Screen extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         Start_Screen.backGround.drawCentered(400, 300);
+        g.drawString(currentYear,700,50);
         meteors.clear();
         projectiles.clear();
         int pIndex = 0;
