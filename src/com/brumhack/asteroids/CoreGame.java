@@ -17,6 +17,7 @@ public class CoreGame extends BasicGame {
     int lastSpawn;
     int firstYear;
     int firstMonth;
+    int lastAstMove = 300;
     ArrayList<Company> companies = new ArrayList<>();
     AstroidAbstract aAbstract = new AstroidAbstract();
 
@@ -50,16 +51,22 @@ public class CoreGame extends BasicGame {
     }
 
 
+    private int moveAstroid(){
+        aAbstract.moveAsteroids();
+        return 300;
+    }
+
     private int spawn(){
         int x = 0;
         int y = 0;
-        int moveX = 15;
-        int moveY = 15;
+        int moveX = 1;
+        int moveY = 3;
         for(Company c : companies){
             Astroid a;
             if(c.hasDate(firstYear, firstMonth)) {
                 a = new Astroid(x, y, c.getValue(firstYear, firstMonth));
                 a.setMovingDirection(moveX, moveY);
+                aAbstract.register(a);
             }
             firstMonth++;
             if(firstMonth > 12){
@@ -68,8 +75,8 @@ public class CoreGame extends BasicGame {
             }
             x += 50;
             y += 50;
-            moveX -= 10;
-            moveY -= 5;
+            moveX += 0;
+            moveY += 1;
         }
         return 5000;
     }
@@ -120,9 +127,9 @@ public class CoreGame extends BasicGame {
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
         lastSpawn -= delta;
-        if(lastSpawn <= 0)
-            lastSpawn = spawn();
-
+        if(lastSpawn <= 0) lastSpawn = spawn();
+        lastAstMove -= delta;
+        if(lastAstMove <= 0) lastAstMove = moveAstroid();
 
 
         bulletCd -= delta;

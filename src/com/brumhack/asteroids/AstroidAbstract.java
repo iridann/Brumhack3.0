@@ -12,6 +12,8 @@ public class AstroidAbstract {
 
     public void register(AObserver newAstroid){
         this.aAstroidList.add(newAstroid);
+        System.out.println("Astroid add");
+
     }
 
     public void unregister(AObserver removeAstroid){
