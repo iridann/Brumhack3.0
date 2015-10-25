@@ -29,7 +29,7 @@ public class SimpleGame extends StateBasedGame {
     }
 
     public static void main(String[] args) throws SlickException {
-        AppGameContainer agc = new AppGameContainer(new SimpleGame("Images"));
+        AppGameContainer agc = new AppGameContainer(new SimpleGame("StackStroid"));
         agc.setDisplayMode(800,640,false);
         agc.start();
     }
