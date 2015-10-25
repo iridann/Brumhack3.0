@@ -80,7 +80,7 @@ public class Game_Screen extends BasicGameState {
                 do {
                     y = rand.nextInt(800) - 100;
                 } while ((y < 650) && (y > -50));
-                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000);
+                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000, c.getName());
                 moveX = (float)(rand.nextInt(10) - 5 + 1);
                 moveY = (float)(rand.nextInt(10) - 5 + 1);
                 a.setMovingDirection(moveX, moveY);
@@ -195,6 +195,7 @@ public class Game_Screen extends BasicGameState {
             Circle c = new Circle(a.getX(),a.getY(),a.getDimension());
             meteors.add(c);
             g.draw(c);
+            g.drawString(a.getCompName(), a.getX(), a.getY());
         }
         for (Circle m : meteors) {
             if (remove == true) { break; }
