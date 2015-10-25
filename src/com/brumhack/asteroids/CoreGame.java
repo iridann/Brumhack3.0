@@ -1,5 +1,6 @@
 package com.brumhack.asteroids;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.Math;
@@ -37,6 +38,17 @@ public class CoreGame extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
+        ArrayList<Company> companies = new ArrayList<>();
+        Parser.readCompanies(companies);
+        for(Company c : companies){
+            //System.out.println(c.getName());
+        }
+
+        if(companies.get(1).hasDate(2012, 03)) {
+            System.out.println(companies.get(2).getName());
+            System.out.println(companies.get(2).getValue(2012, 02));
+        }
+
         // Initialises counter variables at 0
         ms = 0;
         // Load in graphics

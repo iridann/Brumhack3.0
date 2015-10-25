@@ -12,10 +12,10 @@ public class Company {
 
 
     private class Year {
-        private int[] months;
+        private int[] months = new int[12];
         private int name;
 
-        private Year(int name){
+        public Year(int name){
             this.name = name;
         }
         public int getName(){
@@ -50,9 +50,13 @@ public class Company {
         return this.name;
     }
 
-    public void addYear(Year year){
-        this.years.put(year.getName(), year);
+    public void addYear(int year){
+
+        Year y = new Year(year);
+        this.years.put(y.getName(), y);
     }
+
+
 
     public boolean hasYear(int year){
         if( this.years.get(year) == null)
@@ -64,7 +68,20 @@ public class Company {
         ( (Year)this.years.get(year) ).addValue(month, value);
     }
 
-
+    public boolean hasDate(int year, int month){
+        if(!hasYear(year))
+            return false;
+        if(month < 0 || month > 12)
+            return false;
+        if( ((Year)this.years.get(year)).getValue(month) == 0)
+            return false;
+        return true;
+    }
+    public int getValue(int year, int month){
+        if(!hasDate(year, month))
+            throw new RuntimeException(" has not this date");
+        return ((Year)this.years.get(year)).getValue(month);
+    }
 
 
 
