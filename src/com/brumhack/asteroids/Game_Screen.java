@@ -14,6 +14,12 @@ import java.util.ArrayList;
  * Created by Soviet on 24/10/15.
  */
 public class Game_Screen extends BasicGameState {
+    int lastSpawn;
+    int firstYear;
+    int firstMonth;
+    int lastAstMove = 300;
+    ArrayList<Company> companies = new ArrayList<>();
+    AstroidAbstract aAbstract = new AstroidAbstract();
     // Counter variable declaration
     int ms;
     int bulletCd;
@@ -48,8 +54,53 @@ public class Game_Screen extends BasicGameState {
 
     float[] points = {0,25,10,15,20,25,10,0};
 
+    private int moveAstroid() {
+        aAbstract.moveAsteroids();
+        return 300;
+    }
+
+    private int spawn(){
+        int x = 0;
+        int y = 0;
+        int moveX = 1;
+        int moveY = 3;
+        for(Company c : companies){
+            Astroid a;
+            if(c.hasDate(firstYear, firstMonth)) {
+                a = new Astroid(x, y, c.getValue(firstYear, firstMonth));
+                a.setMovingDirection(moveX, moveY);
+                aAbstract.register(a);
+            }
+            firstMonth++;
+            if(firstMonth > 12){
+                firstMonth = 1;
+                firstYear++;
+            }
+            x += 50;
+            y += 50;
+            moveX += 0;
+            moveY += 1;
+        }
+        return 5000;
+    }
+
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        int[] arr = Parser.readCompanies(companies);
+        firstMonth = arr[0];
+        firstYear = arr[1];
+
+
+        //for(Company c : companies){
+        //System.out.println(c.getName());
+        //}
+
+        //if(companies.get(1).hasDate(2012, 03)) {
+        //    System.out.println(companies.get(2).getName());
+        //    System.out.println(companies.get(2).getValue(2012, 02));
+        //}
+
+
         // Initialises counter variables at 0
         ms = 0;
         bulletCd = 0;
@@ -74,6 +125,11 @@ public class Game_Screen extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        lastSpawn -= delta;
+        if(lastSpawn <= 0) lastSpawn = spawn();
+        lastAstMove -= delta;
+        if(lastAstMove <= 0) lastAstMove = moveAstroid();
+
         bulletCd -= delta;
         if (ms > 10) {
             movement();
