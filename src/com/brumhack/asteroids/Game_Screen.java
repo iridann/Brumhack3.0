@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by Soviet on 24/10/15.
  */
 public class Game_Screen extends BasicGameState {
-    private Image ship = null;
+
     private Image facebookAsteroid = null;
     private Image googleAsteroid = null;
     private Image microsoftAsteroid = null;
@@ -42,7 +42,6 @@ public class Game_Screen extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        ship = new Image("res/ship(2).png");
         Ship = new Circle(300,300,40);
         facebookAsteroid = new Image("res/facebookAsteroid.001.png");
         poly = new Polygon(points);
@@ -54,8 +53,8 @@ public class Game_Screen extends BasicGameState {
         accel = 0;
         speed = 0;
         rotation = 0;
-        xrot = (float)(ship.getWidth() * 0.5);
-        yrot = (float)(ship.getHeight() * 0.5);
+        xrot = (float)(poly.getWidth() * 0.5);
+        yrot = (float)(poly.getHeight() * 0.5);
 
 
     }
