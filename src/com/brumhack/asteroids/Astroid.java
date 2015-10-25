@@ -8,10 +8,17 @@ public class Astroid implements AObserver {
     private float dimension;
     private float movingX, movingY;
 
-    public Astroid(float x, float y, float dimension) {
+    public String getCompName() {
+        return this.compName;
+    }
+
+    private String compName;
+
+    public Astroid(float x, float y, float dimension, String compName) {
         this.x = x;
         this.y = y;
         this.dimension = dimension;
+        this.compName = compName;
     }
 
     public void setMovingDirection(float x, float y){
