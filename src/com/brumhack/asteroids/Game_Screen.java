@@ -4,7 +4,6 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -43,8 +42,6 @@ public class Game_Screen extends BasicGameState {
     private static float maxSpeed = 10;
     private float xspeed;
     private float yspeed;
-    private float xrot;
-    private float yrot;
     private float rotation;
     // Bullet variables
     private static float bulletSpeed = (float)(maxSpeed * 1.4);
@@ -68,7 +65,6 @@ public class Game_Screen extends BasicGameState {
 
     private int spawn(){
         float x = 0;
-        System.out.println(x);
         float y = 0;
         float moveX = 1;
         float moveY = 3;
@@ -230,7 +226,7 @@ public class Game_Screen extends BasicGameState {
                 score++;
             } catch(IndexOutOfBoundsException ex) {
                 System.err.println(ex);
-            };
+            }
         }
         
         ship.setCenterY(shipy);
