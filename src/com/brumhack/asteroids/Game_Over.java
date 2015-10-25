@@ -27,7 +27,8 @@ public class Game_Over extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-
+        Start_Screen.backGround.drawCentered(400, 300);
+        g.drawString("Score: " + Game_Screen.score, 400,300);
     }
 
 

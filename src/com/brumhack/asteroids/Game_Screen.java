@@ -9,17 +9,20 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Soviet on 24/10/15.
  */
 public class Game_Screen extends BasicGameState {
+    Random rand;
     int lastSpawn;
     int firstYear;
     int firstMonth;
     int lastAstMove = 300;
     ArrayList<Company> companies = new ArrayList<>();
     AstroidAbstract aAbstract = new AstroidAbstract();
+    public static int score;
     // Counter variable declaration
     int ms;
     int bulletCd;
@@ -45,6 +48,8 @@ public class Game_Screen extends BasicGameState {
     private static float bulletSpeed = (float)(maxSpeed * 1.4);
     // Object array declarations
     private ArrayList<Bullet> bullets;
+    private ArrayList<Circle> meteors;
+    private ArrayList<Circle> projectiles;
     // Input declaration
     private Input input;
     @Override
@@ -56,18 +61,27 @@ public class Game_Screen extends BasicGameState {
 
     private int moveAstroid() {
         aAbstract.moveAsteroids();
-        return 300;
+        return 10;
     }
 
     private int spawn(){
-        int x = 0;
-        int y = 0;
-        int moveX = 1;
-        int moveY = 3;
+        float x = 0;
+        System.out.println(x);
+        float y = 0;
+        float moveX = 1;
+        float moveY = 3;
         for(Company c : companies){
             Astroid a;
             if(c.hasDate(firstYear, firstMonth)) {
-                a = new Astroid(x, y, c.getValue(firstYear, firstMonth));
+                do {
+                    x = rand.nextInt(1000) - 100;
+                } while ((x > 850) && (x < -50));
+                do {
+                    y = rand.nextInt(800) - 100;
+                } while ((y < 650) && (y > -50));
+                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000);
+                moveX = (float)(rand.nextInt(10) - 5 + 1);
+                moveY = (float)(rand.nextInt(10) - 5 + 1);
                 a.setMovingDirection(moveX, moveY);
                 aAbstract.register(a);
             }
@@ -76,10 +90,6 @@ public class Game_Screen extends BasicGameState {
                 firstMonth = 1;
                 firstYear++;
             }
-            x += 50;
-            y += 50;
-            moveX += 0;
-            moveY += 1;
         }
         return 5000;
     }
@@ -89,8 +99,9 @@ public class Game_Screen extends BasicGameState {
         int[] arr = Parser.readCompanies(companies);
         firstMonth = arr[0];
         firstYear = arr[1];
+        rand = new Random();
 
-
+        score = 0;
         //for(Company c : companies){
         //System.out.println(c.getName());
         //}
@@ -119,12 +130,15 @@ public class Game_Screen extends BasicGameState {
         rotation = 0;
         // Init object arrays
         bullets = new ArrayList<Bullet>();
+        projectiles = new ArrayList<Circle>();
+        meteors = new ArrayList<Circle>();
 
 
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+
         lastSpawn -= delta;
         if(lastSpawn <= 0) lastSpawn = spawn();
         lastAstMove -= delta;
@@ -137,7 +151,7 @@ public class Game_Screen extends BasicGameState {
                 shoot(delta);
             }
             for (Bullet b : bullets) {
-                b.update(delta);
+                    b.update(delta);
             }
             ms = 0;
         } else {
@@ -155,20 +169,26 @@ public class Game_Screen extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         Start_Screen.backGround.drawCentered(400, 300);
         for (Bullet b : bullets) {
-            g.draw(new Circle(b.getX(),b.getY(), 5));
+            Circle c = new Circle(b.getX(),b.getY(), 5);
+            projectiles.add(c);
+            g.draw(c);
         }
         ArrayList<Astroid> arr = aAbstract.getAstroidPositions();
         for (Astroid a : arr) {
-            g.draw(new Circle(200 , 200,a.getDimension()));
+            Circle c = new Circle(a.getX(),a.getY(),a.getDimension());
+            meteors.add(c);
+            g.draw(c);
         }
         ship.setCenterY(shipy);
         ship.setCenterX(shipx);
-        g.drawString("Angle: " + Float.toString(rotation) + "\nSpeed: " + Float.toString(speed) + "\nAccel: " + Float.toString(accel) + "\nx speed: " + xspeed + "\ny speed: " + yspeed, 10, 10);
+        g.drawString("Angle: " + Float.toString(rotation) + "\nSpeed: " + Float.toString(speed) + "\nAccel: " + Float.toString(accel) + "\nScore: " + score, 10, 10);
         g.rotate(shipx, shipy, rotation);
         g.draw(ship);
         g.fill(ship);
 
     }
+
+
 
     public void movement() {
         input = new Input(100);
