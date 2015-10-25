@@ -85,6 +85,15 @@ public class Game_Screen extends BasicGameState {
                 a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000, c.getName());
                 moveX = (float)(rand.nextInt(10) - 5 + 1);
                 moveY = (float)(rand.nextInt(10) - 5 + 1);
+                if((int)moveX == 0)
+                    moveX = 1.0f;
+                if((int)moveY == 0.)
+                    moveY = 1.0f;
+                if(x > 400.0f)
+                    moveX *= -1.0f;
+                if(y > 300.0f)
+                    moveY *= -1.0f;
+
                 a.setMovingDirection(Math.abs(moveX), Math.abs(moveY));
                 aAbstract.register(a);
             }
@@ -212,12 +221,18 @@ public class Game_Screen extends BasicGameState {
         }
 
         if (remove == true) {
-            projectiles.remove(pIndex);
-            bullets.remove(pIndex);
-            meteors.remove(mIndex);
-            aAbstract.unregister(arr.get(mIndex));
-            score++;
+
+            try {
+                projectiles.remove(pIndex);
+                bullets.remove(pIndex);
+                meteors.remove(mIndex);
+                aAbstract.unregister(arr.get(mIndex));
+                score++;
+            } catch(IndexOutOfBoundsException ex) {
+                System.err.println(ex);
+            };
         }
+        
         ship.setCenterY(shipy);
         ship.setCenterX(shipx);
         g.drawString("\nScore: " + score + "\nBullets: " + bullets.size() + "\nAstroids: " + meteors.size(), 10, 10);
