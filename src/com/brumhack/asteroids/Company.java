@@ -56,8 +56,6 @@ public class Company {
         this.years.put(y.getName(), y);
     }
 
-
-
     public boolean hasYear(int year){
         if( this.years.get(year) == null)
             return false;

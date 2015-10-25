@@ -18,9 +18,7 @@ public class AstroidAbstract {
         this.aAstroidList.remove(removeAstroid);
     }
 
-    protected void notifyAsteroids(int state){
-        for(AObserver a : aAstroidList){
-            a.update(state);
-        }
+    protected void moveAsteroids(){
+        for(AObserver a : aAstroidList) a.move();
     }
 }

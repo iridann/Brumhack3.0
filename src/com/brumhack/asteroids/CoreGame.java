@@ -14,6 +14,14 @@ import org.newdawn.slick.geom.Circle;
  */
 public class CoreGame extends BasicGame {
     // Counter variable declaration
+    int lastSpawn;
+    int firstYear;
+    int firstMonth;
+    ArrayList<Company> companies = new ArrayList<>();
+    AstroidAbstract aAbstract = new AstroidAbstract();
+
+
+
     int ms;
     int bulletCd;
     // Ship coordinates
@@ -41,18 +49,51 @@ public class CoreGame extends BasicGame {
         super(gamename);
     }
 
+
+    private int spawn(){
+        int x = 0;
+        int y = 0;
+        int moveX = 15;
+        int moveY = 15;
+        for(Company c : companies){
+            Astroid a;
+            if(c.hasDate(firstYear, firstMonth)) {
+                a = new Astroid(x, y, c.getValue(firstYear, firstMonth));
+                a.setMovingDirection(moveX, moveY);
+            }
+            firstMonth++;
+            if(firstMonth > 12){
+                firstMonth = 1;
+                firstYear++;
+            }
+            x += 50;
+            y += 50;
+            moveX -= 10;
+            moveY -= 5;
+        }
+        return 5000;
+    }
+
+
     @Override
     public void init(GameContainer gc) throws SlickException {
-        ArrayList<Company> companies = new ArrayList<>();
-        Parser.readCompanies(companies);
-        for(Company c : companies){
-            //System.out.println(c.getName());
-        }
+        int[] arr = Parser.readCompanies(companies);
+        firstMonth = arr[0];
+        firstYear = arr[1];
 
-        if(companies.get(1).hasDate(2012, 03)) {
-            System.out.println(companies.get(2).getName());
-            System.out.println(companies.get(2).getValue(2012, 02));
-        }
+
+        //for(Company c : companies){
+            //System.out.println(c.getName());
+        //}
+
+        //if(companies.get(1).hasDate(2012, 03)) {
+        //    System.out.println(companies.get(2).getName());
+        //    System.out.println(companies.get(2).getValue(2012, 02));
+        //}
+
+
+
+
 
         // Initialises counter variables at 0
         ms = 0;
@@ -78,6 +119,12 @@ public class CoreGame extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+        lastSpawn -= delta;
+        if(lastSpawn <= 0)
+            lastSpawn = spawn();
+
+
+
         bulletCd -= delta;
             if (ms > 10) {
                 movement();

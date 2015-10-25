@@ -7,8 +7,9 @@ import java.util.ArrayList;
  * Created by janospotecki on 25/10/15.
  */
 public class Parser {
-    public static void readCompanies(ArrayList<Company> arr){
-
+    public static int[] readCompanies(ArrayList<Company> arr){
+        boolean firstline = true;
+        int[] output = new int[2]; // will hold arr[0] = firstmonth, arr[1] = firstyear
 
         FileInputStream fstream = null;
         try {
@@ -53,6 +54,11 @@ public class Parser {
                 if(!exists)
                     arr.add(c);
 
+                if(firstline){
+                    output[0] = month;
+                    output[1] = year;
+                    firstline = false;
+                }
 
             }
         } catch (IOException e) {
@@ -65,5 +71,6 @@ public class Parser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    return output;
     }
 }
