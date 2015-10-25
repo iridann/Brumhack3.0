@@ -14,24 +14,32 @@ import java.util.ArrayList;
  * Created by Soviet on 24/10/15.
  */
 public class Game_Screen extends BasicGameState {
-    private Image ship = null;
+    // Counter variable declaration
+    int ms;
+    int bulletCd;
+    // Graphics declaration
     private Image facebookAsteroid = null;
     private Image googleAsteroid = null;
     private Image microsoftAsteroid = null;
     private Image appleAsteroid = null;
-    private Shape Ship = null;
-    private Shape poly = null;
-    private int ms;
-    private float accel;
-    private float speed;
+    private Shape ship = null;
+    // Ship coordinates
     private float shipx;
     private float shipy;
-    private static int maxSpeed = 15;
+    // Ship movement variables
+    private float accel;
+    private float speed;
+    private static float maxSpeed = 10;
     private float xspeed;
     private float yspeed;
     private float xrot;
     private float yrot;
     private float rotation;
+    // Bullet variables
+    private static float bulletSpeed = (float)(maxSpeed * 1.4);
+    // Object array declarations
+    private ArrayList<Bullet> bullets;
+    // Input declaration
     private Input input;
     @Override
     public int getID() {
@@ -42,28 +50,39 @@ public class Game_Screen extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        ship = new Image("res/ship(2).png");
-        Ship = new Circle(300,300,40);
+        // Initialises counter variables at 0
+        ms = 0;
+        bulletCd = 0;
+        // Load in graphics
         facebookAsteroid = new Image("res/facebookAsteroid.001.png");
-        poly = new Polygon(points);
-        poly.closed();
+        ship = new Polygon(points);
+        ship.closed();
+        // Init ship coords
         shipx = container.getWidth() / 2;
-        shipy=container.getHeight() / 2;
-        poly.setCenterY(shipy);
-        poly.setCenterX(shipx);
+        shipy = container.getHeight() / 2;
+        ship.setCenterY(shipy);
+        ship.setCenterX(shipx);
+        // Init accel, speed & rotation
         accel = 0;
         speed = 0;
         rotation = 0;
-        xrot = (float)(ship.getWidth() * 0.5);
-        yrot = (float)(ship.getHeight() * 0.5);
+        // Init object arrays
+        bullets = new ArrayList<Bullet>();
 
 
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        bulletCd -= delta;
         if (ms > 10) {
             movement();
+            if (input.isKeyDown(Input.KEY_SPACE)) {
+                shoot(delta);
+            }
+            for (Bullet b : bullets) {
+                b.update(delta);
+            }
             ms = 0;
         } else {
             ms += delta;
@@ -78,14 +97,16 @@ public class Game_Screen extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        Start_Screen.backGround.drawCentered(400, 320);
-//        g.texture(Ship,ship,true);
-//        g.draw(Ship);
-        poly.setCenterY(shipy);
-        poly.setCenterX(shipx);
-        g.rotate(shipx,shipy,rotation);
-        g.draw(poly);
-        g.fill(poly);
+        Start_Screen.backGround.drawCentered(400, 300);
+        for (Bullet b : bullets) {
+            g.draw(new Circle(b.getX(),b.getY(), 5));
+        }
+        ship.setCenterY(shipy);
+        ship.setCenterX(shipx);
+        g.drawString("Angle: " + Float.toString(rotation) + "\nSpeed: " + Float.toString(speed) + "\nAccel: " + Float.toString(accel) + "\nx speed: " + xspeed + "\ny speed: " + yspeed, 10, 10);
+        g.rotate(shipx, shipy, rotation);
+        g.draw(ship);
+        g.fill(ship);
 
     }
 
@@ -137,5 +158,11 @@ public class Game_Screen extends BasicGameState {
         }
     }
 
+    public void shoot(int delta) {
+        if (bulletCd <= 0) {
+            bullets.add(new Bullet(shipx, shipy, bulletSpeed, rotation));
+            bulletCd = 250;
+        }
+    }
 
 }
