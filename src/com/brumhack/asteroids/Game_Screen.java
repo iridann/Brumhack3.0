@@ -80,10 +80,19 @@ public class Game_Screen extends BasicGameState {
                 do {
                     y = rand.nextInt(800) - 100;
                 } while ((y < 650) && (y > -50));
-                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 2000);
+                a = new Astroid(x, y, (c.getValue(firstYear, firstMonth)) / 1500, c.getName());
                 moveX = (float)(rand.nextInt(10) - 5 + 1);
                 moveY = (float)(rand.nextInt(10) - 5 + 1);
-                a.setMovingDirection(moveX, moveY);
+                if((int)moveX == 0)
+                    moveX = 1.0f;
+                if((int)moveY == 0.)
+                    moveY = 1.0f;
+                if(x > 400.0f)
+                    moveX *= -1.0f;
+                if(y > 300.0f)
+                    moveY *= -1.0f;
+
+                a.setMovingDirection(Math.abs(moveX), Math.abs(moveY));
                 aAbstract.register(a);
             }
             firstMonth++;
@@ -92,7 +101,7 @@ public class Game_Screen extends BasicGameState {
                 firstYear++;
             }
         }
-        return 5000;
+        return 2500;
     }
 
     @Override
@@ -195,6 +204,7 @@ public class Game_Screen extends BasicGameState {
             Circle c = new Circle(a.getX(),a.getY(),a.getDimension());
             meteors.add(c);
             g.draw(c);
+            g.drawString(a.getCompName(), a.getX(), a.getY());
         }
         for (Circle m : meteors) {
             if (remove == true) { break; }
@@ -209,12 +219,18 @@ public class Game_Screen extends BasicGameState {
         }
 
         if (remove == true) {
-            projectiles.remove(pIndex);
-            bullets.remove(pIndex);
-            meteors.remove(mIndex);
-            aAbstract.unregister(arr.get(mIndex));
-            score++;
+
+            try {
+                projectiles.remove(pIndex);
+                bullets.remove(pIndex);
+                meteors.remove(mIndex);
+                aAbstract.unregister(arr.get(mIndex));
+                score++;
+            } catch(IndexOutOfBoundsException ex) {
+                System.err.println(ex);
+            };
         }
+        
         ship.setCenterY(shipy);
         ship.setCenterX(shipx);
         g.drawString("\nScore: " + score + "\nBullets: " + bullets.size() + "\nAstroids: " + meteors.size(), 10, 10);
