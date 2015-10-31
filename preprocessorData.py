@@ -74,24 +74,17 @@ def grabData(company, startDate, endDate, year, db):
 	startDate = str(year) + '-' + startDate 
 	endDate = str(year) + '-' + endDate
 	data = table.query(KeyConditionExpression = Key('Ticker').eq(company.stockcode) & Key('Date').between(startDate, endDate))
-	#print(data['Items'])
 	return data['Items']
 
 def extractMonth(data, company):
 	for d in data:
-		#print( str(d['Date'])  + ": " + str(d['Open']) )
-		#extract the year
-		#YYYY-MM-DD
 		year = d['Date'][0:4]
 		month = d['Date'][5:7]
 		value = float(d['Market_Cap'])  
-		
 		if not company.hasYear(year):
 			company.addYear(Year(year))
-
 		if not company.getYear(year).hasMonth(month):
 			company.getYear(year).addMonth(Month(month))
-
 		company.getYear(year).getMonth(month).addDay(value)
 
 def pullYears(company, startYear, endYear, db):
@@ -99,15 +92,11 @@ def pullYears(company, startYear, endYear, db):
 		tmp = endYear
 		endYear = startYear
 		startYear = endYear
-	
 	print(company.name)
-
 	for year in range(startYear, endYear+1):
 		extractMonth(grabData(company, '01-01', '12-31', year, db), company)
 		print(str(year) + " done")
 
-
-	
 if __name__ == "__main__":
 	startYear = 2006
 	endYear = 2013
